@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>babu</title>
+</head>
+<body>
+    <input type="text" id="inp">
+    <button id="sender">send</button>
+    <ul id="messages"></ul>
+
+    <script src="https://cdn.socket.io/4.6.0/socket.io.min.js"
+            integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+"
+            crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+            crossorigin="anonymous"></script>
+    <script>
+        const socket = io.connect("http://192.168.1.70");
+
+        let room = prompt("What room do you want to join?");
+
+        socket.emit("new_user", {"room": room});
+
+        $("#sender").on("click", () => {
+                socket.emit("message", {
+                    "message": $("#inp").val(),
+                    "room": room,
+                });
+                $("#inp").val("");
+            },
+        );
+
+        socket.on("message", msg => {
+            console.log(msg);
+            $("#messages").append($("<li>").text(msg.message));
+        });
+
+    </script>
+</body>
+</html>

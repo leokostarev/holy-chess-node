@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>менюшка</title>
+</head>
+<body>
+    <form action="/menu" method="post">
+        <label for="room">комната</label>
+        <input id="room" type="text" name="room" placeholder="...">
+
+        <label for="password">пароль</label>
+        <input id="password" type="text" name="password" placeholder="...">
+
+        <label for="do_create">Создать новую?</label>
+        <input id="do_create" type="checkbox" name="do_create">
+
+        <button type="submit">Создать/Зайти</button>
+        <!-- <button type="submit">Зайти</button> -->
+    </form>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link type="text/css" href="static/pieces.css">
+    <title>Holy Chess</title>
+</head>
+<body>
+    <div style="width: 800px; height: 800px">
+        <% for (let x = 0; x < 8; x++) { %>
+            <% for (let y = 0; y < 8; y++) { %>
+                <div style="position: absolute; width: 100px; height: 100px;
+                        top: <%= x * 100 %>px; left: <%= y * 100 %>px;
+                        background-color: <%= ((x + y) % 2 === 0 ? "#f0d9b5" : "#b58863") %>; background-image: url('https://dynamic-media-cdn.tripadvisor.com/media/photo-o/25/7a/be/ad/nilay170.jpg?w=100&h=-1&s=1')"
+                     id="<%= `cell_${x}_${y}` %>">
+                    <%= `${x} ${y}` %>
+                </div>
+            <% } %>
+        <% } %>
+    </div>
+
+    <script src="https://cdn.socket.io/4.6.0/socket.io.min.js"
+            integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+"
+            crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+            crossorigin="anonymous"></script>
+
+    <script src = "static/game.js"></script>
+</body>
+</html>
