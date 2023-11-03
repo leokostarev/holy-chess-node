@@ -8,9 +8,6 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
 
-const PORT = process.env.PORT ?? 80;
-
-
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "templates"));
 
@@ -30,7 +27,7 @@ io.on("connection", (socket) => {
 });
 
 app.get("/", (req, res) => {
-    res.render("index");
+    res.render("index", {LINK: process.env.LINK});
 });
 
 app.get("/menu", (req, res) => {
@@ -69,9 +66,9 @@ let rooms = []; //[{name, password, Game}]
 
 if (process.env.LOCAL) {
     server.listen(
-        PORT,
+        process.env.PORT ?? 80,
         "0.0.0.0",
-        () => console.log(`listening on ${PORT}...`),
+        () => console.log(`listening on ${(process.env.PORT ?? 80)}...`),
     );
 } else {
     module.exports = app;
