@@ -6,6 +6,7 @@ const http = require("http");
 
 const app = express();
 const server = http.createServer(app);
+
 const io = socketio(server);
 
 app.set("view engine", "ejs");
@@ -71,5 +72,10 @@ if (process.env.LOCAL) {
         () => console.log(`listening on ${(process.env.PORT ?? 80)}...`),
     );
 } else {
+    server.listen(
+        process.env.PORT ?? 3000,
+        () => console.log(`listening on ${(process.env.PORT ?? 80)}...`),
+    );
+    console.log("EXPORT!", process.env.LOCAL);
     module.exports = app;
 }

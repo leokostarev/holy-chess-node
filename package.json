@@ -2,9 +2,10 @@
   "name": "holy-chess",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "node server.js\n",
+    "dev": "node devApp.js\n",
     "serve": "nodemon server.js\n"
   },
   "keywords": [],
@@ -17,6 +18,7 @@
     "socket.io": "^4.7.2"
   },
   "devDependencies": {
+    "ngrok": "^5.0.0-beta.2",
     "nodemon": "^3.0.1"
   }
 }
