@@ -66,9 +66,13 @@ app.get("/game", (req, res) => {
 
 let rooms = []; //[{name, password, Game}]
 
-server.listen(
-    PORT,
-    "0.0.0.0",
-    () => console.log(`listening on ${PORT}...`),
-);
 
+if (process.env.LOCAL) {
+    server.listen(
+        PORT,
+        "0.0.0.0",
+        () => console.log(`listening on ${PORT}...`),
+    );
+} else {
+    module.exports = app;
+}
