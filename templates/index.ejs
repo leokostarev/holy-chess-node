@@ -9,31 +9,29 @@
     <button id="sender">send</button>
     <ul id="messages"></ul>
 
-    <script src="https://cdn.socket.io/4.6.0/socket.io.min.js"
-            integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+"
-            crossorigin="anonymous"></script>
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
             integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
             crossorigin="anonymous"></script>
     <script>
-        const socket = io.connect("/");
 
-        let room = prompt("What room do you want to join?");
+        const pusher = new Pusher("96a6c5bc9ce712f90ddb", {
+            cluster: "eu",
+        });
 
-        socket.emit("new_user", {"room": room});
+        const channel = pusher.subscribe("index-ch");
+
+        let msg = document.getElementById("messages");
+
+        channel.bind("message", function (data) {
+            msg.insertAdjacentHTML("beforeend",
+            `<li>${JSON.stringify(data)}</li>`
+            );
+        });
+
 
         $("#sender").on("click", () => {
-                socket.emit("message", {
-                    "message": $("#inp").val(),
-                    "room": room,
-                });
-                $("#inp").val("");
-            },
-        );
-
-        socket.on("message", msg => {
-            console.log(msg);
-            $("#messages").append($("<li>").text(msg.message));
+            channel.trigger("client-send", $("#inp").val());
         });
 
     </script>
