@@ -23,11 +23,6 @@ const pusher = new Pusher({
     useTLS:  true,
 });
 
-pusher.trigger("index-ch", "message", {
-    message: "yo mama",
-});
-
-
 app.get("/", (req, res) => {
     res.render("index");
 });
@@ -45,6 +40,11 @@ app.get("/game", (req, res) => {
     res.render("game");
 });
 
+setTimeout(() => {
+    pusher.trigger("index-ch", "message", {
+        message: "yo mama",
+    });
+}, 5000);
 
 if (process.env.LOCAL) {
     console.log("LOCAL!", process.env.LOCAL);
