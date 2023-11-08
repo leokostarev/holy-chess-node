@@ -40,7 +40,7 @@ app.get("/game", (req, res) => {
     res.render("game");
 });
 
-setTimeout(() => {
+setInterval(() => {
     pusher.trigger("index-ch", "message", {
         message: "yo mama",
     });

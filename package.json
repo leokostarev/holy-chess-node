@@ -5,8 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js\n",
-    "dev": "node devApp.js\n",
-    "serve": "nodemon server.js\n"
+    "serve": "nodemon server.js\n",
+    "ngrok": "node devApp.js\n"
   },
   "keywords": [],
   "author": "RedON",
