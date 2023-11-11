@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Holy Chat</title>
+</head>
+<body>
+    <input id="message-body" type="text">
+    <button onclick="buttonClick()">Send</button>
+    <div id="messages"></div>
+
+    <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.7.4.3.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+            crossorigin="anonymous"></script>
+    <script>
+
+        const buttonClick = () => {
+            var input = document.getElementById('message-body');
+            publishMessage(input.value);
+            input.value = '';
+        };
+
+        const showMessage = (msg) => {
+            var message = document.createElement('div');
+            message.innerText = msg;
+            document.getElementById('messages').appendChild(message);
+        };
+
+        let pubnub;
+
+        const setupPubNub = () => {
+            // Update this block with your publish/subscribe keys
+            pubnub = new PubNub({
+                publishKey:   "pub-c-78f8aeaf-c800-4522-a006-df4b63f56915",
+                subscribeKey: "sub-c-fcf7a377-4aed-450e-a840-5a9aae9969d8",
+                userId:       "myUniqueUserId"
+            });
+
+            // add listener
+            const listener = {
+                status:   (statusEvent) => {
+                    if (statusEvent.category === "PNConnectedCategory") {
+                        console.log("Connected");
+                    }
+                },
+                message:  (messageEvent) => {
+                    showMessage(messageEvent.message.description);
+                },
+                presence: (presenceEvent) => {
+                    // handle presence
+                }
+            };
+            pubnub.addListener(listener);
+
+            // subscribe to a channel
+            pubnub.subscribe({
+                channels: ["hello_world"]
+            });
+        };
+
+        // run after page is loaded
+        window.onload = setupPubNub;
+
+        // publish message
+        const publishMessage = async (message) => {
+            // With the right payload, you can publish a message, add a reaction to a message,
+            // send a push notification, or send a small payload called a signal.
+            const publishPayload = {
+                channel: "hello_world",
+                message: {
+                    title:       "greeting",
+                    description: message
+                }
+            };
+            await pubnub.publish(publishPayload);
+        }
+
+    </script>
+</body>
+</html>

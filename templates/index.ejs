@@ -1,39 +1,15 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>babu</title>
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Holy Chess</title>
 </head>
 <body>
-    <input type="text" id="inp">
-    <button id="sender">send</button>
-    <ul id="messages"></ul>
-
-    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
-            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
-            crossorigin="anonymous"></script>
-    <script>
-
-        const pusher = new Pusher("96a6c5bc9ce712f90ddb", {
-            cluster: "eu",
-        });
-
-        const channel = pusher.subscribe("index-ch");
-
-        let msg = document.getElementById("messages");
-
-        channel.bind("message", function (data) {
-            msg.insertAdjacentHTML("beforeend",
-                `<li>${JSON.stringify(data)}</li>`
-            );
-        });
-
-
-        $("#sender").on("click", () => {
-            channel.trigger("client-send", $("#inp").val());
-        });
-
-    </script>
+    <h1>nothing here</h1>
+    <a href="/chat">chat</a>
+    <a href="/menu">menu</a>
 </body>
 </html>
