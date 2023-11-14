@@ -2,7 +2,6 @@
 //                                 IMPORTS
 //========================================================================
 const Favicon = require("serve-favicon");
-const Cors = require("cors");
 const Express = require("express");
 const BodyParser = require("body-parser");
 const Path = require("path");
@@ -18,11 +17,10 @@ const server = Http.createServer(app);
 app.set("view engine", "ejs");
 app.set("views", Path.join(__dirname, "templates"));
 
-app.use(Cors());
 app.use(Express.json());
-app.use(BodyParser.urlencoded({extended: false}));
-app.use(Express.static(Path.join(__dirname, "/static")));
-app.use(Favicon(Path.join(__dirname, "/static/favicon.ico")));
+app.use(BodyParser.urlencoded({extended: true}));
+app.use("/static", Express.static(Path.join(__dirname, "static")));
+app.use(Favicon(Path.join(__dirname, "static/favicon.ico")));
 
 
 const pubnub = new PubNub({
@@ -31,45 +29,19 @@ const pubnub = new PubNub({
     userId:       "server",
 });
 
-pubnub.subscribe({channels: ["to_server"]});
-
 // add listener
 pubnub.addListener({
-    status:  (statusEvent) => {
-        if (statusEvent.category === "PNConnectedCategory") {
-            console.log("Connected");
-        }
-    },
-    message: (message) => {
-        publishMessage("Hi!:" + message.message);
+    status: (statusEvent) => {
+        console.log(statusEvent);
     },
 });
 
-function publishMessage(message) {
+function publishMessage(channel, message) {
     pubnub.publish({
-        channel: "from_server",
+        channel: channel,
         message: message,
     });
 }
-
-setInterval(() => {
-    publishMessage("Hi mom!");
-}, 3000);
-
-//
-// const readline = require("readline").createInterface({
-//     input:  process.stdin,
-//     output: process.stdout,
-// });
-//
-// readline.setPrompt("");
-// readline.prompt();
-// // publish after hitting return
-// readline.on("line", (message) => {
-//     publishMessage(message).then(r => {
-//     });
-// });
-
 
 //========================================================================
 //                                 ROUTES
@@ -100,6 +72,15 @@ app.get("/game", (req, res) => {
 });
 
 
+// events
+app.post("/message", (req, res) => {
+    console.log(req.body);
+
+    publishMessage("chat", req.body.message);
+
+    res.status(200);
+});
+
 //========================================================================
 //                                 SETUP
 //========================================================================
@@ -109,7 +90,6 @@ if (process.env.LOCAL) {
     console.log("LOCAL!", process.env.LOCAL);
     server.listen(
         process.env.PORT ?? 80,
-        "0.0.0.0",
         () => console.log(`listening on ${(process.env.PORT ?? 80)}...`),
     );
 } else {

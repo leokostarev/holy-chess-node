@@ -14,14 +14,9 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
             integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
             crossorigin="anonymous"></script>
+    <script src="/static/communication.js"></script>
     <script defer>
-        let pubnub = new PubNub({
-            publishKey:   "pub-c-78f8aeaf-c800-4522-a006-df4b63f56915",
-            subscribeKey: "sub-c-fcf7a377-4aed-450e-a840-5a9aae9969d8",
-            userId:       "myUniqueUserId"
-        });
-
-        pubnub.subscribe({channels: ["from_server"]});
+        pubnub.subscribe({channels: ["chat"]});
 
         pubnub.addListener({
             status:  (statusEvent) => {
@@ -31,26 +26,19 @@
             },
             message: (messageEvent) => {
                 showMessage(messageEvent.message);
-            }
+            },
         });
 
         function buttonClick() {
-            let input = document.getElementById('message-body');
-            publishMessage(input.value);
-            input.value = '';
+            let input = document.getElementById("message-body");
+            send_to_server("chat", input.value);
+            input.value = "";
         }
 
         function showMessage(msg) {
-            let message = document.createElement('li');
+            let message = document.createElement("li");
             message.innerText = msg;
-            document.getElementById('messages').appendChild(message);
-        }
-
-        function publishMessage(message) {
-            pubnub.publish({
-                channel: "to_server",
-                message: message
-            }).then(r => console.log(r));
+            document.getElementById("messages").appendChild(message);
         }
 
     </script>
