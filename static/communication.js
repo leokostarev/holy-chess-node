@@ -1,5 +1,5 @@
 let pubnub = new PubNub({
-    publishKey:   "pub-c-78f8aeaf-c800-4522-a006-df4b63f56915",
+    publishKey:   "pub-c-78f8aeaf-c800-4522-a006-df4b63f56915",//fixme
     subscribeKey: "sub-c-fcf7a377-4aed-450e-a840-5a9aae9969d8",
     userId:       "online_session",
 });

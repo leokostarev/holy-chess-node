@@ -1,16 +1,22 @@
-//========================================================================
-//                                 IMPORTS
-//========================================================================
+//#region IMPORTS
 const Favicon = require("serve-favicon");
 const Express = require("express");
+const Logging = require("./scripts/logging");
+const {raise, raise_if} = require("./scripts/utils");
 const BodyParser = require("body-parser");
 const Path = require("path");
+const Dotenv = require("dotenv");
 const PubNub = require("pubnub");
 const Http = require("http");
+//#endregion
 
-//========================================================================
-//                                 CONFIG
-//========================================================================
+
+//#region CONFIG
+
+//dotenv
+Dotenv.config();
+
+// express
 const app = Express();
 const server = Http.createServer(app);
 
@@ -22,14 +28,12 @@ app.use(BodyParser.urlencoded({extended: true}));
 app.use("/static", Express.static(Path.join(__dirname, "static")));
 app.use(Favicon(Path.join(__dirname, "static/favicon.ico")));
 
-
+//pubnub
 const pubnub = new PubNub({
     publishKey:   "pub-c-78f8aeaf-c800-4522-a006-df4b63f56915",
     subscribeKey: "sub-c-fcf7a377-4aed-450e-a840-5a9aae9969d8",
     userId:       "server",
 });
-
-// add listener
 pubnub.addListener({
     status: (statusEvent) => {
         console.log(statusEvent);
@@ -43,9 +47,11 @@ function publishMessage(channel, message) {
     });
 }
 
-//========================================================================
-//                                 ROUTES
-//========================================================================
+//#endregion
+
+
+//#region ROUTES
+
 app.get("/", (req, res) => {
     res.render("index");
 });
@@ -81,11 +87,12 @@ app.post("/message", (req, res) => {
     res.status(200);
 });
 
-//========================================================================
-//                                 SETUP
-//========================================================================
+//#endregion
 
 
+//#region SETUP
+
+log("express", "info", "starting up!");
 if (process.env.LOCAL) {
     console.log("LOCAL!", process.env.LOCAL);
     server.listen(
@@ -100,3 +107,5 @@ if (process.env.LOCAL) {
     );
     module.exports = app;
 }
+
+//#endregion
