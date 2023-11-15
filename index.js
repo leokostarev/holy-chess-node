@@ -2,12 +2,13 @@
 const Favicon = require("serve-favicon");
 const Express = require("express");
 const Logging = require("./scripts/logging");
-const {raise, raise_if} = require("./scripts/utils");
+const {raise} = require("./scripts/utils");
 const BodyParser = require("body-parser");
 const Path = require("path");
 const Dotenv = require("dotenv");
 const PubNub = require("pubnub");
 const Http = require("http");
+const DBCon = require("./scripts/DBCon");
 //#endregion
 
 
@@ -30,22 +31,19 @@ app.use(Favicon(Path.join(__dirname, "static/favicon.ico")));
 
 //pubnub
 const pubnub = new PubNub({
-    publishKey:   "pub-c-78f8aeaf-c800-4522-a006-df4b63f56915",
-    subscribeKey: "sub-c-fcf7a377-4aed-450e-a840-5a9aae9969d8",
+    publishKey:   process.env.PUBNUB_PUB_KEY || raise("PUBNUB_PUB_KEY NOT SPECIFIED"),
+    subscribeKey: process.env.PUBNUB_SUB_KEY || raise("PUBNUB_SUB_KEY NOT SPECIFIED"),
     userId:       "server",
 });
+
 pubnub.addListener({
     status: (statusEvent) => {
         console.log(statusEvent);
     },
 });
 
-function publishMessage(channel, message) {
-    pubnub.publish({
-        channel: channel,
-        message: message,
-    });
-}
+const publishMessage = (channel, message) =>
+    pubnub.publish({channel: channel, message: message});
 
 //#endregion
 
@@ -58,7 +56,7 @@ app.get("/", (req, res) => {
 
 
 app.get("/chat", (req, res) => {
-    res.render("chat");
+    res.render("chat", {PUBNUB_SUB_KEY: process.env.PUBNUB_SUB_KEY});
 });
 
 
@@ -92,7 +90,8 @@ app.post("/message", (req, res) => {
 
 //#region SETUP
 
-log("express", "info", "starting up!");
+Logging.log("express", "info", "starting up!");
+
 if (process.env.LOCAL) {
     console.log("LOCAL!", process.env.LOCAL);
     server.listen(
@@ -105,7 +104,8 @@ if (process.env.LOCAL) {
         process.env.PORT ?? 3000,
         () => console.log(`listening on ${(process.env.PORT ?? 3000)}...`),
     );
-    module.exports = app;
+    console.log("EXPORTING");
+    module.exports = exports = app;
 }
 
 //#endregion

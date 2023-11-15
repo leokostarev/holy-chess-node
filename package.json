@@ -4,8 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js\n",
-    "serve": "nodemon server.js\n",
+    "start": "node index.js\n",
+    "serve": "nodemon index.js\n",
     "ngrok": "node devApp.js\n",
     "holyVer": "node holyVercel.js\n"
   },

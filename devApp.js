@@ -3,9 +3,8 @@ const ngrok = require("ngrok");
 const port = process.env.PORT || 80;
 
 nodemon({
-    script: "server.js",
+    script: "index.js",
     ext:    "js",
-    env:    {"LOCAL": "1"},
 });
 
 let url = null;
