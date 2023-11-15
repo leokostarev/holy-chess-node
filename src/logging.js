@@ -2,7 +2,7 @@ const Flog = require("log-to-file");
 
 require("./utils"); //rjust
 
-let LOG_TO_CONSOLE = false;
+let LOG_TO_CONSOLE = true;
 
 class Logger {
     constructor(who) {
@@ -34,12 +34,12 @@ function log(who, level, message) {
         console.log(
             `${level} ${new Date().toISOString()} ${who} |> ${message}`,
         );
-    } else {
-        Flog(
-            `${level} ${who} |> ${message}`,
-            "log.log",
-        );
     }
+    Flog(
+        `${level} ${who} |> ${message}`,
+        "log.log",
+    );
+
 }
 
 module.exports = exports = {

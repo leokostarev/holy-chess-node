@@ -1,14 +1,15 @@
 //#region IMPORTS
 const Favicon = require("serve-favicon");
 const Express = require("express");
-const Logging = require("./scripts/logging");
-const {raise} = require("./scripts/utils");
-const BodyParser = require("body-parser");
+const Logging = require("./src/logging");
+const {raise} = require("./src/utils");
 const Path = require("path");
 const Dotenv = require("dotenv");
 const PubNub = require("pubnub");
 const Http = require("http");
-const DBCon = require("./scripts/DBCon");
+const AuthRouter = require("./authRouter");
+const Mongoose = require("mongoose");
+
 //#endregion
 
 
@@ -25,9 +26,12 @@ app.set("view engine", "ejs");
 app.set("views", Path.join(__dirname, "templates"));
 
 app.use(Express.json());
-app.use(BodyParser.urlencoded({extended: true}));
+app.use(Express.urlencoded({extended: true}));
 app.use("/static", Express.static(Path.join(__dirname, "static")));
 app.use(Favicon(Path.join(__dirname, "static/favicon.ico")));
+
+app.use("/auth", AuthRouter);
+
 
 //pubnub
 const pubnub = new PubNub({
@@ -90,22 +94,28 @@ app.post("/message", (req, res) => {
 
 //#region SETUP
 
-Logging.log("express", "info", "starting up!");
+Logging.info("express", "starting up!");
 
-if (process.env.LOCAL) {
-    console.log("LOCAL!", process.env.LOCAL);
-    server.listen(
-        process.env.PORT ?? 80,
-        () => console.log(`listening on ${(process.env.PORT ?? 80)}...`),
-    );
-} else {
-    console.log("NONLOCAL!", process.env.LOCAL);
-    server.listen(
-        process.env.PORT ?? 3000,
-        () => console.log(`listening on ${(process.env.PORT ?? 3000)}...`),
-    );
-    console.log("EXPORTING");
-    module.exports = exports = app;
+async function setup() {
+    await Mongoose.connect(process.env.MONGO);
+
+
+    if (process.env.LOCAL) {
+        console.log("LOCAL!", process.env.LOCAL);
+        server.listen(
+            process.env.PORT ?? 80,
+            () => console.log(`listening on ${(process.env.PORT ?? 80)}...`),
+        );
+    } else {
+        console.log("NONLOCAL!", process.env.LOCAL);
+        server.listen(
+            process.env.PORT ?? 3000,
+            () => console.log(`listening on ${(process.env.PORT ?? 3000)}...`),
+        );
+        console.log("EXPORTING");
+        module.exports = exports = app;
+    }
 }
 
+setup();
 //#endregion

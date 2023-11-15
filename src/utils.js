@@ -3,7 +3,7 @@ String.prototype.rjust = function (width, padding) {
     padding = padding || " ";
     padding = padding[0];
     if (this.length < width)
-        return padding.repeat(width - this.length) + this;
+        return this + padding.repeat(width - this.length);
     else
         return this.toString();
 };
